@@ -1,5 +1,5 @@
 import json
-from pathlib
+from pathlib import Path
 
 class JsonStorage:
 
