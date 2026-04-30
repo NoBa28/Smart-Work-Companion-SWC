@@ -1,7 +1,8 @@
-from storage.session_repository import SessionRepository
-from domain.session import Session
 from datetime import datetime
 import uuid
+
+from domain.session import Session
+from storage.session_repository import SessionRepository
 
 
 class TrackerService:

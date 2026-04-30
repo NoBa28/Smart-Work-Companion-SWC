@@ -1,7 +1,8 @@
-from storage.note_repository import NoteRepository
-from domain.note import Note
 from datetime import datetime
 import uuid
+
+from domain.note import Note
+from storage.note_repository import NoteRepository
 
 
 class NoteService:

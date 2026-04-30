@@ -28,7 +28,7 @@ class NoteRepository:
                 notes[i] = note
                 self.save_all(notes)
                 return
-            
+
         raise ValueError(f"Note with id {note.id} not found")
 
     def delete(self, note_id: str) -> bool:

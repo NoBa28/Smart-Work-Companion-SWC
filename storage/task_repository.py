@@ -28,7 +28,7 @@ class TaskRepository:
                 tasks[i] = task
                 self.save_all(tasks)
                 return
-            
+
         raise ValueError(f"Task with id {task.id} not found")
 
     def delete(self, task_id: str) -> bool:

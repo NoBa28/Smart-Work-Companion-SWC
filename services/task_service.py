@@ -1,6 +1,7 @@
-from storage.task_repository import TaskRepository
-from domain.task import Task
 import uuid
+
+from domain.task import Task
+from storage.task_repository import TaskRepository
 
 
 class TaskService:
