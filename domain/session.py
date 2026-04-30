@@ -10,14 +10,12 @@ class Session:
         start_time: datetime,
         end_time: datetime,
         task_id: str | None = None,
-        notes: str = "",
     ):
         self.id = id
         self.project = project
         self.start_time = start_time
         self.end_time = end_time
         self.task_id = task_id
-        self.notes = notes
 
     def to_dict(self):
         return {
@@ -26,7 +24,6 @@ class Session:
             "start_time": self.start_time.isoformat(),
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "task_id": self.task_id,
-            "notes": self.notes,
         }
 
     @staticmethod
@@ -39,5 +36,4 @@ class Session:
                 datetime.fromisoformat(data["end_time"]) if data["end_time"] else None
             ),
             task_id=data.get("task_id"),
-            notes=data.get("notes", ""),
         )

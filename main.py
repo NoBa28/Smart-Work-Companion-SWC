@@ -1,5 +1,6 @@
 from services.task_service import TaskService
 from services.tracker_service import TrackerService
+from services.note_service import NoteService
 
 
 def test_task_service() -> None:
@@ -28,10 +29,20 @@ def test_tracker_service() -> None:
     all_sessions = service.get_sessions()
     print("All Sessions: ", all_sessions)
 
+def test_note_service() -> None:
+    service = NoteService()
+
+    note = service.add_note("This is a test note")
+    print("Created Note: ", note)
+
+    notes = service.get_notes()
+    print("All Notes: ", notes)
+
 
 def main():
     # test_task_service()
-    test_tracker_service()
+    # test_tracker_service()
+    test_note_service()
 
 
 if __name__ == "__main__":

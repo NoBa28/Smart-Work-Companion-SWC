@@ -9,8 +9,16 @@ class Note:
         self.created_at = created_at
 
     def to_dict(self):
-        return self.__dict__
+        return {
+            "id": self.id,
+            "text": self.text,
+            "created_at": self.created_at.isoformat(),
+        }
 
     @staticmethod
     def from_dict(data):
-        return Note(**data)
+        return Note(
+            id=data["id"],
+            text=data["text"],
+            created_at=datetime.fromisoformat(data["created_at"]),
+        )

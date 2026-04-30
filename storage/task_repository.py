@@ -22,11 +22,13 @@ class TaskRepository:
 
     def update(self, task: Task) -> None:
         tasks = self.get_all()
+
         for i, t in enumerate(tasks):
             if t.id == task.id:
                 tasks[i] = task
                 self.save_all(tasks)
-                break
+                return
+            
         raise ValueError(f"Task with id {task.id} not found")
 
     def delete(self, task_id: str) -> bool:
