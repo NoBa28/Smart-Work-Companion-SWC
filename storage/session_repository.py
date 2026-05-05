@@ -3,8 +3,8 @@ from storage.json_storage import JsonStorage
 
 
 class SessionRepository:
-    def __init__(self, file_path="data/sessions.json"):
-        self.storage = JsonStorage(file_path)
+    def __init__(self, storage=None, file_path="data/sessions.json"):
+        self.storage = storage or JsonStorage(file_path)
 
     def get_all(self) -> list[Session]:
         raw = self.storage.load()

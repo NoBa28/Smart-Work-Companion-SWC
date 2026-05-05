@@ -4,8 +4,8 @@ from storage.json_storage import JsonStorage
 
 class NoteRepository:
 
-    def __init__(self, file_path="data/notes.json"):
-        self.storage = JsonStorage(file_path)
+    def __init__(self, storage=None, file_path="data/notes.json"):
+        self.storage = storage or JsonStorage(file_path)
 
     def get_all(self) -> list[Note]:
         raw = self.storage.load()

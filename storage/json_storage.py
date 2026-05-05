@@ -9,7 +9,11 @@ class JsonStorage:
 
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if not self.file_path.parent.exists() or not self.file_path.read_text().strip():
+        if not self.file_path.exists():
+            self.file_path.write_text("[]")
+            return
+        
+        if not self.file_path.read_text().strip():
             self.file_path.write_text("[]")
 
     def load(self) -> list[dict]:

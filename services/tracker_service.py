@@ -7,8 +7,8 @@ from storage.session_repository import SessionRepository
 
 class TrackerService:
 
-    def __init__(self):
-        self.repo = SessionRepository()
+    def __init__(self, repo=None):
+        self.repo = repo or SessionRepository()
 
     def start_session(self, project: str, task_id: str) -> Session:
         if self.get_active_session():
@@ -20,7 +20,6 @@ class TrackerService:
             project=project,
             start_time=datetime.now(),
             end_time=None,
-            notes="",
         )
 
         self.repo.add(session)
@@ -36,6 +35,7 @@ class TrackerService:
 
         session.end_time = datetime.now()
         self.repo.update(session)
+
         return session
 
     def get_active_session(self) -> Session | None:

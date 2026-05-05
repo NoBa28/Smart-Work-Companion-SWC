@@ -4,8 +4,8 @@ from storage.json_storage import JsonStorage
 
 class TaskRepository:
 
-    def __init__(self, file_path="data/tasks.json"):
-        self.storage = JsonStorage(file_path)
+    def __init__(self, storage=None, file_path="data/tasks.json"):
+        self.storage = storage or JsonStorage(file_path)
 
     def get_all(self) -> list[Task]:
         raw = self.storage.load()
