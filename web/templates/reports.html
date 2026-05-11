@@ -1,0 +1,149 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="page-header">
+  <h1>Reports</h1>
+  <p style="margin:0; color:var(--text-muted);">Complete overview of your work and time</p>
+</div>
+
+<!-- KPI Cards -->
+<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:24px; margin-bottom:48px;">
+  <div class="card" style="text-align:center; padding:32px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="font-size:12px; color:#64748b; font-weight:600; letter-spacing:0.5px;">TOTAL TIME</div>
+    <div style="font-size:32px; font-weight:700; color:#6366f1; margin-top:12px; white-space:nowrap; font-feature-settings:'tnum';">
+      {% set h = total_time // 3600 %}{% set m = (total_time % 3600) // 60 %}
+      {{ h }}h {{ m }}m
+    </div>
+  </div>
+  <div class="card" style="text-align:center; padding:32px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="font-size:12px; color:#64748b; font-weight:600; letter-spacing:0.5px;">COMPLETED SESSIONS</div>
+    <div style="font-size:32px; font-weight:700; margin-top:12px;">{{ total_sessions }}</div>
+  </div>
+  <div class="card" style="text-align:center; padding:32px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="font-size:12px; color:#64748b; font-weight:600; letter-spacing:0.5px;">TASKS WORKED ON</div>
+    <div style="font-size:32px; font-weight:700; margin-top:12px;">{{ time_by_task | length }}</div>
+  </div>
+  <div class="card" style="text-align:center; padding:32px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="font-size:12px; color:#64748b; font-weight:600; letter-spacing:0.5px;">NOTES WRITTEN</div>
+    <div style="font-size:32px; font-weight:700; margin-top:12px;">{{ total_notes }}</div>
+  </div>
+</div>
+
+<!-- Time by Project with visual bars -->
+<div class="card" style="padding:32px; margin-bottom:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+  <h2 style="margin:0 0 28px; font-size:15px; font-weight:600; color:#334155;">Time by Project</h2>
+  {% if time_by_project %}
+    {% for project, data in time_by_project.items() %}
+      <div style="margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px;">
+          <div style="font-weight:600;">{{ project }}</div>
+          <div style="font-family:monospace; color:var(--text-muted);">{{ data.formatted }}</div>
+        </div>
+        <div style="background:#f1e7ff; border-radius:9999px; height:6px; overflow:hidden; margin-top:4px;">
+          <div style="background:#6366f1; height:100%; width: {{ data.width }}%; border-radius:9999px;"></div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty" style="padding:40px 0;">No project time recorded yet.</div>
+  {% endif %}
+</div>
+
+<!-- Time by Task with visual bars + task titles -->
+<div class="card" style="padding:32px; margin-bottom:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+  <h2 style="margin:0 0 28px; font-size:15px; font-weight:600; color:#334155;">Time by Task</h2>
+  {% if time_by_task %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width:45%">Task</th>
+          <th>Time</th>
+          <th style="width:35%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in time_by_task %}
+        <tr>
+          <td style="font-weight:600;">{{ item.title }}</td>
+          <td style="font-family:monospace; white-space:nowrap;">{{ item.formatted }}</td>
+          <td>
+            <div style="background:#f1e7ff; border-radius:9999px; height:6px; overflow:hidden; margin-top:2px;">
+              <div style="background:#6366f1; height:100%; width: {{ item.width }}%; border-radius:9999px;"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty" style="padding:40px 0;">No time tracked on tasks yet.</div>
+  {% endif %}
+</div>
+
+<!-- Recent Activity with full context -->
+<div class="card" style="padding:32px; margin-bottom:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+  <h2 style="margin:0 0 28px; font-size:15px; font-weight:600; color:#334155;">Recent Activity</h2>
+  {% if recent_sessions %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Task</th>
+        <th>Duration</th>
+        <th>Started</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in recent_sessions %}
+      <tr>
+        <td style="font-weight:600;">{{ s.project }}</td>
+        <td>{{ s.task_title }}</td>
+        <td style="font-family:monospace; white-space:nowrap;">{{ s.duration_formatted }}</td>
+        <td style="color:var(--text-muted); font-size:13px;">{{ s.start_time[:16].replace('T',' ') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty" style="padding:40px 0;">No completed sessions yet.</div>
+  {% endif %}
+</div>
+
+<!-- Recent Notes -->
+<div class="card" style="padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+  <h2 style="margin:0 0 28px; font-size:15px; font-weight:600; color:#334155;">Recent Notes</h2>
+  {% if recent_notes %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Note</th>
+        <th style="width:180px;">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for note in recent_notes %}
+      <tr>
+        <td>{{ note.text }}</td>
+        <td style="color:var(--text-muted); font-size:13px;">
+          {{ note.created_at[:16].replace('T',' ') }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty" style="padding:32px 0;">
+    <p style="margin:0;">No notes written yet.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Danger zone -->
+<div class="card" style="padding:32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border:1px solid #fee2e2;">
+  <h2 style="margin:0 0 8px; font-size:15px; font-weight:600; color:#334155;">Danger Zone</h2>
+  <p style="margin:0 0 20px; color:#64748b; font-size:14px;">This will permanently delete all tasks, notes, and tracked sessions.</p>
+  <form action="/data/clear" method="post" style="margin:0;">
+    <button type="submit" class="danger">Clear all data</button>
+  </form>
+</div>
+
+{% endblock %}

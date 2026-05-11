@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Work Companion</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="nav-brand">Smart Work</div>
+      <a href="/tasks" class="{% if request.url.path == '/tasks' %}active{% endif %}">Tasks</a>
+      <a href="/notes" class="{% if request.url.path == '/notes' %}active{% endif %}">Notes</a>
+      <a href="/tracker" class="{% if request.url.path == '/tracker' %}active{% endif %}">Time Tracker</a>
+      <a href="/reports" class="{% if request.url.path == '/reports' %}active{% endif %}">Reports</a>
+    </nav>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="page-header">
+  <h1>Time Tracker</h1>
+  <p style="margin:0; color:var(--text-muted);">Focus on what matters</p>
+</div>
+
+<div class="card">
+  {% if active %}
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap;">
+      <div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:6px; letter-spacing:0.5px;">CURRENT SESSION</div>
+        <div style="font-size:24px; font-weight:700;">{{ active.project }}</div>
+        <div style="color:var(--text-muted); margin-top:4px;">
+          Task: {{ active.task_id }} · Started {{ active.start_time.strftime('%b %d, %H:%M') if active.start_time else '' }}
+        </div>
+      </div>
+      <form action="/tracker/stop" method="post">
+        <button type="submit" class="danger">Stop Session</button>
+      </form>
+    </div>
+
+    <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--border);">
+      <form action="/tracker/note" method="post" style="display:flex; gap:12px;">
+        <input type="text" name="text" placeholder="Add a note about this session..." style="flex:1;" required />
+        <button type="submit" class="secondary">Save Note</button>
+      </form>
+    </div>
+
+  {% else %}
+    <div style="text-align:center; padding:40px 20px;">
+      <h3 style="margin:0 0 12px; font-weight:600;">No active session</h3>
+      <p style="color:var(--text-muted); max-width:320px; margin:0 auto;">
+        Add a task with a project on the <strong>Tasks</strong> page to start tracking.
+      </p>
+    </div>
+  {% endif %}
+</div>
+
+{% if not active and recent_sessions %}
+<div class="card">
+  <h2 style="margin:0 0 24px; font-size:18px;">Recent Sessions</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Task</th>
+        <th>Duration</th>
+        <th>Ended</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in recent_sessions[:8] %}
+      <tr>
+        <td style="font-weight:600;">{{ s.project }}</td>
+        <td>{{ s.task_id }}</td>
+        <td style="font-family:monospace;">
+          {% if s.end_time and s.start_time %}
+            {% set dur = (s.end_time - s.start_time).total_seconds() %}
+            {{ (dur // 3600) | int }}h {{ ((dur % 3600) // 60) | int }}m
+          {% else %}—{% endif %}
+        </td>
+        <td style="color:var(--text-muted); font-size:13px;">
+          {{ s.end_time.strftime('%b %d, %H:%M') if s.end_time else '' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endblock %}
